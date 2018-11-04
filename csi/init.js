@@ -1,14 +1,41 @@
+//
+//: ,
+const getJson = (url) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: url,
+            method: "GET",
+            format: "JSON",
+            success: resolve,
+            error:  reject
+        })
+    })
+};
+
+window.onload = async () => {
+    const c = new Controller();
+    const titleUrl = "https://en.wikipedia.org/api/rest_v1/page/random/title";
+    const pageUrl = "https://en.wikipedia.org/api/rest_v1/page/summary/";
+
+    console.log(new Array(30).fill("<small>LOADING</small>").join(""))
+    c.init(new Array(30).fill("<small>LOADING</small>").join(""));
+
+    const title = await getJson(titleUrl).then((data) => {console.log(data); return data.items[0].title}).catch((err) => "Scrollbar");
+    const content = await getJson(pageUrl+title+"&redirect=false").catch((err) => "Error getting content");
+    const url = content.content_urls.desktop.page;
+    const html = "<a href='"+url+"' target='_blank'><h1 class=''>"+ content.displaytitle +"</h1></a><br/><br/>"
+        + "<img src='"+ content.thumbnail.source +"'/>"
+        + content.extract_html;
+
+    c.updateContent(html);
+    return
+}
+
 $(function(doc) {
 
-	var c = new Controller();
-		c.init();
 
-	$(window).resize( c.updateSize );
-	// $(window).mousemove( c.updateScrollTopOnMove );
+
+
+
+
 });
-
-
-var content = '<h1>Thought Trends in Graphic Design </h1>';
-	content += '<br><h3>The Forces which change students authority in the field of graphic design.</h3>';
-	content +='<br>Amir Houieh<br>';
-	content +='<br><br>Academies as major environments to shape our thoughts. And KABK — specifically Graphic Design Department — as an institution of involvement inherent in the social power relation, tried to not only shape your thoughts but also criticise them. To uncover the relational and social preconditions of KABK, I therefore based my thesis on data from various text sources from another academy thesis of graduated year students. and from it self. The idea is to show the theme and pattern of chosen topics for the thesis within the last 5 years. And un-mapping this patterns within this authorisation.'

@@ -5,20 +5,18 @@ function deActive(){
 	$(this).removeClass('active');
 }
 
-
-
-
 function Controller(){
 
+	var content = "";
 	var self = this;
-
 	self.scrollBarWidth = getScrollbarWidth() + 15;
 	self.size = 0;
 	self.pageWidth = null;
 
-	self.init = function(){
+	self.init = function(_content){
+        content = _content;
 		self.pageWidth = $(window).width();
-		var numToAdd = Math.ceil( self.pageWidth / self.scrollBarWidth );
+		// var numToAdd = Math.ceil( self.pageWidth / (self.scrollBarWidth*4) );
 		self.append( 30 );
 	}
 
@@ -32,16 +30,21 @@ function Controller(){
 			self.append( tobeAdded );
 		}
 
-	}
+	};
+
+	self.updateContent = (_content) => {
+        $(".content").each((i, elem)=>{
+            elem.innerHTML = _content;
+		})
+	};
 
 	self.append = function( number ){
 		for( var x in range(self.size, number + self.size) ){
 			var item = new self.ScrollBar( content, self.pageWidth / number);
 			item.appendTo( $('body') ).scrollTop( parseInt($(window).height()) * 1.5 );
 		}
-
 		self.size = $('.scrollBar').size();
-	}
+	};
 
 	self.onScroll = function( e ){
 			var target = $(this);
@@ -57,7 +60,7 @@ function Controller(){
 					var thisMap = offset.map(0, self.size, 1 , 2);
 					$(this).delay( offset + 10 ).animate({'scrollTop': targetTop * thisMap + ( 2 * offset ), queue: false}, 1);
 				});
-				
+
 			}
 
 	}
@@ -76,20 +79,11 @@ function Controller(){
 
 
 	self.fnMove = function ( e ){
-
 		$(this).animate({'scrollTop': 0, queue: false}, 500);
-		// $('.scrollBar').each(function(i){
-		// 	var left = parseInt( $(this).css('left') );
-		// 	var offset = Math.abs( e.pageX - left );
-		// 	var width = offset.map(0, self.pageWidth, 1, 100);
-		// 	$(this).css({width: width+'%'});
-		// });
-
-
 	}
 
 
-	self.ScrollBar = function( content, width ) {	
+	self.ScrollBar = function( content, width ) {
 		return $('<div>')
 						.addClass( "scrollBar" )
 						.data({random:  Math.random()})
