@@ -27,8 +27,8 @@ window.onload = async () => {
         + "<img src='"+ content.thumbnail.source +"'/>"
         + content.extract_html;
 
+    document.title = content.displaytitle;
     c.updateContent(html);
-    return
 }
 
 $(function(doc) {
